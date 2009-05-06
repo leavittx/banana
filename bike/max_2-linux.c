@@ -6,7 +6,7 @@
 double  r1 = 1, r2 = 3, r3 = 1, r4 = 2.5, R1 = 20, L = 10, L1 = 3, L2 = 3, L3 = 3, V = 0.5, p = 0;      /*double  r1 = 1, r2 = 3, r3 = 1, r4 = 2.5, R1 = 20, L = 10, L1 = 3, L2 = 3, L3 = 3, V = 0.5;*/
 void Keyboard(unsigned char key, int x, int y)
 {
-  if(key == 13) exit(0);
+  if(key == 27) exit(0);
   if(key=='-')  V-=0.5;
   if(key=='+')  V+=0.1;
   if(key=='/')  R1+=0.5;

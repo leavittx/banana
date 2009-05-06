@@ -138,7 +138,7 @@ void Display(void)
           glPopMatrix();
           glTranslated(0,0,r1+r2+0.5);
            glColor3d(0, 1, 0.5);                                  //
-           Cylinder(0.3,-1.5,1.5);                            // передняя гооизонтальная планка
+           Cylinder(0.3,-1.5,1.5);                            // передняя горизонтальная планка
           glTranslated(0,0,L2);
        Cylinder(0.3,-L3,L3);                              // руль
     glPopMatrix();
@@ -183,7 +183,7 @@ int main( int argc, char **argv )
 {
   glutInit (&argc, argv);
   glutInitDisplayMode (GLUT_DOUBLE | GLUT_DEPTH); //set the display to Double buffer, with depth
-  glutGameModeString( "1680x1050:32@75" ); //the settings for fullscreen mode
+  glutGameModeString( "1280x1024:32@75" ); //the settings for fullscreen mode
   glutEnterGameMode(); //set glut to fullscreen using the settings in the line above
 
   glEnable(GL_DEPTH_TEST);

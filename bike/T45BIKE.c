@@ -6,7 +6,7 @@ int W = 800, H = 600;
 double SyncTime;
 double pi = 3.14159265358979;
 double twopi = 2 * 3.14159265358979;
-
+double L = 10, R = 20, V = 0.5;
 typedef struct 
 {
   double r1;
@@ -240,19 +240,41 @@ void DrawWheel( double r1, double r2, int N, int tex )
 
 void DrawBike( BIKE *Bike )
 {
+  double c = L/(2*R);
+  double alfa= 90 - acos(c)*180/pi;
+  double static Time=0;
   /* Plane */
+  glPushMatrix();
+  glPushMatrix();
   glTranslated(-100, - Bike->REAR_WHEEL.r1 - Bike->REAR_WHEEL.r2, -100);
   glRotated(90, 1, 0, 0);
   DrawPlane(200, 0, 10);
   glRotated(-90, 1, 0, 0);
   glTranslated(100, Bike->REAR_WHEEL.r1 + Bike->REAR_WHEEL.r2, 100);
+  glPopMatrix();
   /* End of Plane */
 
+  
+  
+  glPushMatrix();
+  
+  //glPushMatrix();
+  //glRotated(-alfa, 1, 0, 0);
+  glTranslated(R, 0, 0);
+  glRotated(-(Time + 60), 0, 1, 0);
+  glTranslated(R, 0, 0);
   /* Rear wheels */
+  glPushMatrix();
+  glRotated(-Time*((R-L)/Bike->REAR_WHEEL.r2),0,0,1);
   DrawWheel(Bike->REAR_WHEEL.r1, Bike->REAR_WHEEL.r2, Bike->REAR_WHEEL.N, 1);
-  glTranslated(0, 0, Bike->Width);
-  DrawWheel(Bike->REAR_WHEEL.r1, Bike->REAR_WHEEL.r2, Bike->REAR_WHEEL.N, 1);
+  glPopMatrix();
 
+  glPushMatrix();
+  glTranslated(0, 0, -Bike->Width);
+  glRotated(-Time*((R-L)/Bike->REAR_WHEEL.r2),0,0,1);
+  DrawWheel(Bike->REAR_WHEEL.r1, Bike->REAR_WHEEL.r2, Bike->REAR_WHEEL.N, 1);
+  glPopMatrix();
+  
   glRotated(- 90, 1, 0, 0);
   DrawCyl(15, Bike->REAR_FRAME_R, Bike->REAR_FRAME_R, 0, Bike->Width, 1, 1);
   glRotated(90, 1, 0, 0);
@@ -281,10 +303,13 @@ void DrawBike( BIKE *Bike )
   DrawCyl(15, Bike->FRONT_FRAME_R, Bike->FRONT_FRAME_R, 0, Bike->Length / 2, 1, 1);
   glRotated(-90, 0, 0, 1);
   /* End of Front frame */
-
+  //glPopMatrix();
   /* Rim */
-  glTranslated(- Bike->Length / 2, 0, 0);
 
+  glPushMatrix();
+  
+  glTranslated(- Bike->Length / 2, 0, 0);
+  glRotated(alfa, 0, 1, 0);
   glTranslated(0, Bike->Helm_H + Bike->Helm_R + Bike->MID_FRAME_R, 0);
   glRotated(90, 1, 0, 0);
   DrawCyl(15, Bike->Helm_R, Bike->Helm_R, 0, Bike->Helm_L / 2, 1, 1);
@@ -324,9 +349,16 @@ void DrawBike( BIKE *Bike )
   /* End of Face */
 
   /* Front Wheel */
+  glPushMatrix();
   glTranslated(0, 0, Bike->RIM_W / 2);
+  glRotated(-Time*(R/Bike->FRONT_WHEEL.r2),0,0,1);
   DrawWheel(Bike->FRONT_WHEEL.r1, Bike->FRONT_WHEEL.r2, Bike->FRONT_WHEEL.N, 1);
+  glPopMatrix();
+  glPopMatrix();
+  glPopMatrix();
+  glPopMatrix();
 //  DrawCoords();
+  Time -= V - 0.4;
   /* End of Front wheel */
 }
 
@@ -413,6 +445,7 @@ void Init( void )
   G24_Tex_Load("E:\\CL11321\\tex\\woodshgl.g24", 7);
   G24_Tex_Load("E:\\CL11321\\tex\\grass.g24", 8);
 */
+  /*
   G24_Tex_Load("/home/lev/lp3-get/X/PICS/M.G24", 1);
   G24_Tex_Load("/home/lev/lp3-get/X/PICS/BRICK.G24", 2);
 //  BMP_Tex_Load("/home/lev/lp3-get/X/PICS/M.BMP", 3);
@@ -421,7 +454,14 @@ void Init( void )
   G24_Tex_Load("/home/lev/lp3-get/X/PICS/PYATACK.G24", 6);
   G24_Tex_Load("/home/lev/lp3-get/X/PICS/WOODSHGL.G24", 7);
   G24_Tex_Load("/home/lev/lp3-get/X/PICS/GRASS.G24", 8);
-
+*/
+  G24_Tex_Load("/home/np3/PICS/M.G24", 1);
+  G24_Tex_Load("/home/np3/PICS/BRICK.G24", 2);
+  G24_Tex_Load("/home/np3/PICS/ROOF.G24", 4);
+  G24_Tex_Load("/home/np3/PICS/GR.G24", 5);
+  G24_Tex_Load("/home/np3/PICS/PYATACK.G24", 6);
+  G24_Tex_Load("/home/np3/PICS/WOODSHGL.G24", 7);
+  G24_Tex_Load("/home/np3/PICS/GRASS.G24", 8);
   #if 0
   G24_Tex_Load("/home/np3/Bike/banana/bike/PICS/M.G24", 1);
   G24_Tex_Load("/home/np3/Bike/banana/bike/PICS/BRICK.G24", 2);
@@ -468,7 +508,7 @@ int main( int argc, char **argv )
 
   glutInit (&argc, argv);
   glutInitDisplayMode (GLUT_DOUBLE | GLUT_DEPTH); //set the display to Double buffer, with depth
-  glutGameModeString( "1680x1050:32@75" ); //the settings for fullscreen mode
+  glutGameModeString( "1280x1024:32@75" ); //the settings for fullscreen mode
   glutEnterGameMode(); //set glut to fullscreen using the settings in the line above
 
   glEnable(GL_DEPTH_TEST);
